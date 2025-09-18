@@ -26,14 +26,17 @@ jobs:
 
     - name: Create Draft Release
       id: create_release
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}-${{ github.sha }}
-      run: |
-        gh release create "$tag" \
-          --repo="$GITHUB_REPOSITORY" \
-          --title="Draft release for branch  ${{ github.ref_name }}-${{ github.sha }}" \
-          --generate-notes
+      with:
+        tag_name: ${{ github.ref_name }}-${{ github.sha }}
+        release_name: Draft Release for ${{ github.ref_name }}-${{ github.sha }}
+        body: |
+          Draft release for branch  ${{ github.ref_name }}-${{ github.sha }}
+          Commit: ${{ github.sha }}
+        draft: true
+        prerelease: false
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
